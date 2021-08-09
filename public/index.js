@@ -9,7 +9,8 @@ const PLAYER1_COLOUR = '#ff3030';
 const PLAYER2_COLOUR = '#0099ed';
 
 const gameScreen = document.getElementById('gameScreen');
-const infoText = document.getElementById('info');
+const p1infoText = document.getElementById('p1info');
+const p2infoText = document.getElementById('p2info');
 
 let canvas, ctx;
 
@@ -91,7 +92,7 @@ function keydown(e){
         playerselected = true;
         console.log("Player 1 selected");
         playertext = "PLAYER 1: ";
-        infoText.innerHTML = playertext;
+        p1infoText.innerHTML = playertext;
     }
 
     // 2
@@ -100,14 +101,15 @@ function keydown(e){
         playerselected = true;
         console.log("Player 2 selected");
         playertext = "PLAYER 2: ";
-        infoText.innerHTML = playertext;
+        p2infoText.innerHTML = playertext;
     }
 
     // ENTER
     if (e.keyCode == 13 && entered == false && playerselected){
         name = prompt("NAME");
         playertext = playertext + " " + name;
-        infoText.innerHTML = playertext;
+        if (player == 1){p1infoText.innerHTML = playertext;}
+        if (player == 2){p2infoText.innerHTML = playertext;}
         entered = true;
         console.log("name Entered: " + name);
         readyup();
