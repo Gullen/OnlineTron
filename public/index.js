@@ -1,5 +1,5 @@
-let name = null;
-let player = null;
+let name;
+let player;
 let entered = false;
 let playerselected = false;
 let playertext = "";
@@ -13,7 +13,7 @@ const infoText = document.getElementById('info');
 
 let canvas, ctx;
 
-const gameState = {
+let gameState = {
     player1 : {
         pos : {
             x : 40,
@@ -45,6 +45,8 @@ const gameState = {
         ],
     },
     gridsize: 80,
+    go: false,
+    stop: false,
 }
 
 function init(){
@@ -57,6 +59,27 @@ function init(){
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     document.addEventListener('keydown', keydown);
+}
+
+function paintGame(state){
+    ctx.fillStyle = BG_COLOUR;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const gridsize = state.gridsize;
+    const size = canvas.width / gridsize;
+
+    paintPlayer(state.player1, size, PLAYER1_COLOUR);
+    paintPlayer(state.player2, size, PLAYER2_COLOUR);
+}
+
+function paintPlayer(playerState, size, colour){
+    const snake = playerState.snake;
+    const pos = playerState.pos;
+    ctx.fillStyle = colour;
+    ctx.fillRect(pos.x * size, pos.y * size, size, size);
+    for (let cell of snake){
+        ctx.fillRect(cell.x * size, cell.y * size, size, size);
+    }
 }
 
 function keydown(e){
@@ -86,54 +109,81 @@ function keydown(e){
         playertext = playertext + " " + name;
         infoText.innerHTML = playertext;
         entered = true;
-        console.log("name entered")
+        console.log("name Entered: " + name);
+        readyup();
+    }
+}
+
+async function readyup(){
+    const data = {"player" : player}
+    const options = {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(data)
+    };
+
+    const response = await fetch('/playerReady', options);
+    const returnData = await response.json();
+    console.log(returnData);
+
+    play();
+}
+
+async function play(){
+    let goStatus = gameState.go;
+    let stopStatus = gameState.stop;
+
+    while (stopStatus == false){
+        // PRINT CURRENT FRAME
         paintGame(gameState);
+
+        // UPDATE CURRENT FRAME
+        if (goStatus){
+            movePlayer();
+            console.log(gameState);
+        }
+
+        // SEND & SAVE CURRENT FRAME (SYNC)
+        const data = gameState;
+        const options = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        };
+
+        const response = await fetch('/updateState', options);
+        const returnData = await response.json();
+        gameState = returnData;
+
+        // UPDATE LOCAL VARS
+        goStatus = gameState.go;
+        stopStatus = gameState.stop;
     }
 }
 
-function paintGame(state){
-    ctx.fillStyle = BG_COLOUR;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+function movePlayer(){
+    if (player == 1){
+        v = gameState.player1.vel;
+        pos = gameState.player1.pos;
+        if (v.x == 1){
+            gameState.player1.pos.x = gameState.player1.pos.x + 1;
+        }
+        else if (v.x == -1){
+            gameState.player1.pos.x = gameState.player1.pos.x - 1;
+        }
+        else if (v.y == 1){
+            gameState.player1.pos.y = gameState.player1.pos.y + 1;
+        }
+        else if (v.y == -1){
+            gameState.player1.pos.y = gameState.player1.pos.y - 1;
+        }
 
-    const gridsize = state.gridsize;
-    const size = canvas.width / gridsize;
 
-    paintPlayer(state.player1, size, PLAYER1_COLOUR);
-    paintPlayer(state.player2, size, PLAYER2_COLOUR);
-}
-
-function paintPlayer(playerState, size, colour){
-    const snake = playerState.snake;
-    ctx.fillStyle = colour;
-    for (let cell of snake){
-        ctx.fillRect(cell.x * size, cell.y * size, size, size);
+        gameState.player1.snake.push(pos);
     }
-}
+    if (player == 2){
 
-async function startGame(){
-    let running = true;
-    let playing = false;
+    }
 }
 
 init();
-//paintGame(gameState);
-
-
-async function testFetch(){
-
-    // POST SETTINGS
-
-const salt = 21;
-let data = {salt};
-
-const options = {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(data)
-};
-
-    const response = await fetch('/testAPI', options);
-    const checkdata = await response.json();
-    console.log(checkdata);
-    console.log(checkdata.melon);
-}
