@@ -1,39 +1,57 @@
+let name = null;
+let player = null;
+let entered = false;
+let playerselected = false;
+let playertext = "";
+
 const BG_COLOUR = '#231f20';
-const SNAKE_COLOUR = '#c2c2c2';
-const FOOD_COLOUR = '#e66916';
+const PLAYER1_COLOUR = '#ff3030';
+const PLAYER2_COLOUR = '#0099ed';
 
 const gameScreen = document.getElementById('gameScreen');
+const infoText = document.getElementById('info');
 
 let canvas, ctx;
 
 const gameState = {
-    player : {
+    player1 : {
         pos : {
-            x : 3,
-            y : 10,
+            x : 40,
+            y : 3,
         },
         vel : {
-            x : 1,
-            y : 0,
+            x : 0,
+            y : 1,
         },
         snake : [
-            {x: 1, y: 10},
-            {x: 2, y: 10},
-            {x: 3, y: 10},
+            {x: 40, y: 0},
+            {x: 40, y: 1},
+            {x: 40, y: 2},
         ],
     },
-    food: {
-        x: 7,
-        y: 7,
+    player2 : {
+        pos : {
+            x : 40,
+            y : 77,
+        },
+        vel : {
+            x : 0,
+            y : -1,
+        },
+        snake : [
+            {x: 40, y: 80},
+            {x: 40, y: 79},
+            {x: 40, y: 78},            
+        ],
     },
-    gridsize: 20,
+    gridsize: 80,
 }
 
 function init(){
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
 
-    canvas.width = canvas.height = 600;
+    canvas.width = canvas.height = 880;
 
     ctx.fillStyle = BG_COLOUR;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -43,20 +61,45 @@ function init(){
 
 function keydown(e){
     console.log(e.keyCode);
+
+    // 1
+    if (e.keyCode == 49 && playerselected == false){
+        player = 1;
+        playerselected = true;
+        console.log("Player 1 selected");
+        playertext = "PLAYER 1: ";
+        infoText.innerHTML = playertext;
+    }
+
+    // 2
+    if (e.keyCode == 50 && playerselected == false){
+        player = 2;
+        playerselected = true;
+        console.log("Player 2 selected");
+        playertext = "PLAYER 2: ";
+        infoText.innerHTML = playertext;
+    }
+
+    // ENTER
+    if (e.keyCode == 13 && entered == false && playerselected){
+        name = prompt("NAME");
+        playertext = playertext + " " + name;
+        infoText.innerHTML = playertext;
+        entered = true;
+        console.log("name entered")
+        paintGame(gameState);
+    }
 }
 
 function paintGame(state){
     ctx.fillStyle = BG_COLOUR;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    const food = state.food;
     const gridsize = state.gridsize;
     const size = canvas.width / gridsize;
 
-    ctx.fillStyle = FOOD_COLOUR;
-    ctx.fillRect(food.x * size, food.y * size, size, size);
-
-    paintPlayer(state.player, size, SNAKE_COLOUR);
+    paintPlayer(state.player1, size, PLAYER1_COLOUR);
+    paintPlayer(state.player2, size, PLAYER2_COLOUR);
 }
 
 function paintPlayer(playerState, size, colour){
@@ -67,6 +110,30 @@ function paintPlayer(playerState, size, colour){
     }
 }
 
-init();
-paintGame(gameState);
+async function startGame(){
+    let running = true;
+    let playing = false;
+}
 
+init();
+//paintGame(gameState);
+
+
+async function testFetch(){
+
+    // POST SETTINGS
+
+const salt = 21;
+let data = {salt};
+
+const options = {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(data)
+};
+
+    const response = await fetch('/testAPI', options);
+    const checkdata = await response.json();
+    console.log(checkdata);
+    console.log(checkdata.melon);
+}
