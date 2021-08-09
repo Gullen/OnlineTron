@@ -5,6 +5,11 @@ let playerselected = false;
 let namesUpdated = false;
 let playertext = "";
 
+let player1vx = 0;
+let player1vy = 1;
+let player2vx = 0;
+let player2vy = -1;
+
 const BG_COLOUR = '#231f20';
 const PLAYER1_COLOUR = '#ff3030';
 const PLAYER2_COLOUR = '#0099ed';
@@ -117,6 +122,58 @@ function keydown(e){
         console.log("name Entered: " + name);
         readyup();
     }
+
+    // UP
+    if (e.keyCode == 38 && gameState.go){
+        if (player == 1){
+            player1vx = 0;
+            player1vy = -1;
+        }
+
+        if (player == 2){
+            player2vx = 0;
+            player2vy = -1;
+        }
+    }
+
+    // DOWN
+    if (e.keyCode == 40 && gameState.go){
+        if (player == 1){
+            player1vx = 0;
+            player1vy = 1;
+        }
+
+        if (player == 2){
+            player2vx = 0;
+            player2vy = 1;
+        }
+    }
+
+    // LEFT
+    if (e.keyCode == 37 && gameState.go){
+        if (player == 1){
+            player1vx = -1;
+            player1vy = 0;
+        }
+
+        if (player == 2){
+            player2vx = -1;
+            player2vy = 0;
+        }
+    }
+
+    // RIGHT
+    if (e.keyCode == 39 && gameState.go){
+        if (player == 1){
+            player1vx = 1;
+            player1vy = 0;
+        }
+
+        if (player == 2){
+            player2vx = 1;
+            player2vy = 0;
+        }
+    }
 }
 
 async function readyup(){
@@ -176,6 +233,8 @@ async function play(){
 
 function movePlayer(){
     if (player == 1){
+        gameState.player1.vel.x = player1vx;
+        gameState.player1.vel.y = player1vy;
         v = gameState.player1.vel;
         pos = gameState.player1.pos;
         if (v.x == 1){
@@ -190,12 +249,26 @@ function movePlayer(){
         else if (v.y == -1){
             gameState.player1.pos.y = gameState.player1.pos.y - 1;
         }
-
-
         gameState.player1.snake.push(pos);
     }
     if (player == 2){
-
+        gameState.player2.vel.x = player2vx;
+        gameState.player2.vel.y = player2vy;
+        v = gameState.player2.vel;
+        pos = gameState.player2.pos;
+        if (v.x == 1){
+            gameState.player2.pos.x = gameState.player2.pos.x + 1;
+        }
+        else if (v.x == -1){
+            gameState.player2.pos.x = gameState.player2.pos.x - 1;
+        }
+        else if (v.y == 1){
+            gameState.player2.pos.y = gameState.player2.pos.y + 1;
+        }
+        else if (v.y == -1){
+            gameState.player2.pos.y = gameState.player2.pos.y - 1;
+        }
+        gameState.player2.snake.push(pos);
     }
 }
 

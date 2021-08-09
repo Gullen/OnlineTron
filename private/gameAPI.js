@@ -45,12 +45,24 @@ module.exports = function api(game){
             masterState.player1.pos = recceivedState.player1.pos;
         }
 
+        if (recceivedState.player2.snake.length > masterState.player2.snake.length){
+            masterState.player2.snake = recceivedState.player2.snake;
+            masterState.player2.pos = recceivedState.player2.pos;
+        }
+
         if (player1name !== masterState.player1.name){
             masterState.player1.name = player1name;
         }
 
         if (player2name !== masterState.player2.name){
             masterState.player2.name = player2name;
+        }
+
+        if (recceivedState.player1.vel !== masterState.player1.vel){
+            masterState.player1.vel = recceivedState.player1.vel;
+        }
+        if (recceivedState.player2.vel !== masterState.player2.vel){
+            masterState.player2.vel = recceivedState.player2.vel;
         }
 
         await sleep(100);
