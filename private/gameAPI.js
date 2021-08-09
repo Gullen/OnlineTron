@@ -65,7 +65,7 @@ module.exports = function api(game){
             masterState.player2.vel = recceivedState.player2.vel;
         }
 
-        await sleep(20);
+        //await sleep(20);
         response.send(masterState);
     });
 }
