@@ -65,7 +65,7 @@ module.exports = function api(game){
             masterState.player2.vel = recceivedState.player2.vel;
         }
 
-        await sleep(100);
+        await sleep(20);
         response.send(masterState);
     });
 }
@@ -73,3 +73,11 @@ module.exports = function api(game){
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
+
+function checkBorder(){
+
+}
+
+function checkCollision(){
+
+}
