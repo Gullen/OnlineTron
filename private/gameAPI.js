@@ -3,6 +3,8 @@ const { request, response } = require('express');
 
 let player1ready = false;
 let player2ready = false;
+let player1name;
+let player2name;
 let masterState = null;
 
 module.exports = function api(game){
@@ -12,16 +14,17 @@ module.exports = function api(game){
         const data = request.body;
         if (data.player == 1){
             player1ready = true;
+            player1name = data.name;
             console.log("PLAYER 1 READY");
         }
         else if (data.player == 2){
             player2ready = true;
+            player2name = data.name;
             console.log("PLAYER 2 READY");
         }
         let status = "RECCEIVED - READY"
         const dataToSend = {"status" : status, "player" : data.player, "player1ready" : player1ready, "player2ready" : player2ready};
         response.send(dataToSend);
-        player1ready = true;
     });
 
     game.post('/updateState', async (request, response) => {
@@ -40,6 +43,14 @@ module.exports = function api(game){
         if (recceivedState.player1.snake.length > masterState.player1.snake.length){
             masterState.player1.snake = recceivedState.player1.snake;
             masterState.player1.pos = recceivedState.player1.pos;
+        }
+
+        if (player1name !== masterState.player1.name){
+            masterState.player1.name = player1name;
+        }
+
+        if (player2name !== masterState.player2.name){
+            masterState.player2.name = player2name;
         }
 
         await sleep(100);

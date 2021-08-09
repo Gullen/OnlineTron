@@ -2,6 +2,7 @@ let name;
 let player;
 let entered = false;
 let playerselected = false;
+let namesUpdated = false;
 let playertext = "";
 
 const BG_COLOUR = '#231f20';
@@ -29,6 +30,7 @@ let gameState = {
             {x: 40, y: 1},
             {x: 40, y: 2},
         ],
+        name : ""
     },
     player2 : {
         pos : {
@@ -44,6 +46,7 @@ let gameState = {
             {x: 40, y: 79},
             {x: 40, y: 78},            
         ],
+        name : ""
     },
     gridsize: 80,
     go: false,
@@ -108,8 +111,8 @@ function keydown(e){
     if (e.keyCode == 13 && entered == false && playerselected){
         name = prompt("NAME");
         playertext = playertext + " " + name;
-        if (player == 1){p1infoText.innerHTML = playertext;}
-        if (player == 2){p2infoText.innerHTML = playertext;}
+        if (player == 1){p1infoText.innerHTML = playertext; gameState.player1.name = name;}
+        if (player == 2){p2infoText.innerHTML = playertext; gameState.player2.name = name;}
         entered = true;
         console.log("name Entered: " + name);
         readyup();
@@ -117,7 +120,7 @@ function keydown(e){
 }
 
 async function readyup(){
-    const data = {"player" : player}
+    const data = {"player" : player, "name" : name}
     const options = {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -142,7 +145,15 @@ async function play(){
         // UPDATE CURRENT FRAME
         if (goStatus){
             movePlayer();
-            console.log(gameState);
+            if (gameState.player1.name !== "" || gameState.player2.name !== ""){
+                if (namesUpdated == false){
+                    p1infoText.innerHTML = "PLAYER 1: " + gameState.player1.name;
+                    p2infoText.innerHTML = "PLAYER 2: " + gameState.player2.name;
+                    namesUpdated = true;
+                    console.log("UPDATED NAMES");
+                }
+            }
+            //console.log(gameState);
         }
 
         // SEND & SAVE CURRENT FRAME (SYNC)
