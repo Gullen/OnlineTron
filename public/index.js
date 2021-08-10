@@ -56,6 +56,7 @@ let gameState = {
     gridsize: 80,
     go: false,
     stop: false,
+    winner: "",
 }
 
 function init(){
@@ -228,6 +229,11 @@ async function play(){
         // UPDATE LOCAL VARS
         goStatus = gameState.go;
         stopStatus = gameState.stop;
+    }
+    if (gameState.winner == gameState.player1.name){
+        p1infoText.style.color="lightgreen";
+    } else {
+        p2infoText.style.color="lightgreen";
     }
 }
 

@@ -65,7 +65,10 @@ module.exports = function api(game){
             masterState.player2.vel = recceivedState.player2.vel;
         }
 
-        //await sleep(20);
+        checkBorder();
+        checkCollision();
+
+        await sleep(50);
         response.send(masterState);
     });
 }
@@ -75,7 +78,14 @@ function sleep(ms) {
   }
 
 function checkBorder(){
-
+    if (masterState.player1.pos.x > masterState.gridsize || masterState.player1.pos.y > masterState.gridsize || masterState.player1.pos.x < 0 || masterState.player1.pos.y < 0){
+        masterState.stop = true;
+        masterState.winner = player2name;
+    }
+    if (masterState.player2.pos.x > masterState.gridsize || masterState.player2.pos.y > masterState.gridsize || masterState.player2.pos.x < 0 || masterState.player2.pos.y < 0){
+        masterState.stop = true;
+        masterState.winner = player1name;
+    }
 }
 
 function checkCollision(){
