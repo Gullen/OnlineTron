@@ -113,6 +113,8 @@ function checkCollision(){
             masterState.stop = true;
             masterState.winner = player2name;
             console.log("1 IN 1");
+            console.log(masterState);
+            console.log(masterState.player1.snake);
         }
         if (masterState.player2.pos.x == cell.x && masterState.player2.pos.y == cell.y){
             masterState.stop = true;
@@ -128,6 +130,8 @@ function checkCollision(){
             masterState.stop = true;
             masterState.winner = player1name;
             console.log("2 IN 2");
+            console.log(masterState);
+            console.log(masterState.player2.snake);
         }
         if (masterState.player1.pos.x == cell.x && masterState.player1.pos.y == cell.y){
             masterState.stop = true;
