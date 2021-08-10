@@ -175,6 +175,11 @@ function keydown(e){
             player2vy = 0;
         }
     }
+
+    // R
+    if (e.keyCode == 82 && gameState.stop){
+        //reset();
+    }
 }
 
 async function readyup(){
@@ -211,7 +216,6 @@ async function play(){
                     console.log("UPDATED NAMES");
                 }
             }
-            //console.log(gameState);
         }
 
         // SEND & SAVE CURRENT FRAME (SYNC)
@@ -278,6 +282,72 @@ function movePlayer(){
         }
         gameState.player2.snake.push(pos);
     }
+}
+
+async function reset(){
+    gameState = {
+        player1 : {
+            pos : {
+                x : 40,
+                y : 2,
+            },
+            vel : {
+                x : 0,
+                y : 1,
+            },
+            snake : [
+                {x: 40, y: 0},
+                {x: 40, y: 1},
+                {x: 40, y: 2},
+            ],
+            name : ""
+        },
+        player2 : {
+            pos : {
+                x : 40,
+                y : 78,
+            },
+            vel : {
+                x : 0,
+                y : -1,
+            },
+            snake : [
+                {x: 40, y: 80},
+                {x: 40, y: 79},
+                {x: 40, y: 78},            
+            ],
+            name : ""
+        },
+        gridsize: 80,
+        go: false,
+        stop: false,
+        winner: "",
+    }
+
+    name = null;
+    player = null;
+    entered = false;
+    playerselected = false;
+    namesUpdated = false;
+    playertext = "";
+
+    player1vx = 0;
+    player1vy = 1;
+    player2vx = 0;
+    player2vy = -1;
+
+    const options = {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({})
+    };
+
+    const response = await fetch('/reset', options);
+    const returnData = await response.json();
+    gameState = returnData;
+    p2infoText.style.color="black";
+    p2infoText.style.color="black";
+    init();
 }
 
 init();
