@@ -10,6 +10,15 @@ let masterState = null;
 module.exports = function api(game){
     game.use(express.json({limit: '2mb'}));
 
+    game.post('/reset', async (request, response) =>{
+        player1ready = false;
+        player2ready = false;
+        player1name = null;
+        player2name = null;
+        masterState = null;
+        console.log("-------- R E S E T --------");
+    });
+
     game.post('/playerReady', async (request, response) => {
         const data = request.body;
         if (data.player == 1){
@@ -88,10 +97,12 @@ function checkBorder(){
     if (masterState.player1.pos.x > masterState.gridsize || masterState.player1.pos.y > masterState.gridsize || masterState.player1.pos.x < 0 || masterState.player1.pos.y < 0){
         masterState.stop = true;
         masterState.winner = player2name;
+        console.log("1 OUT");
     }
     if (masterState.player2.pos.x > masterState.gridsize || masterState.player2.pos.y > masterState.gridsize || masterState.player2.pos.x < 0 || masterState.player2.pos.y < 0){
         masterState.stop = true;
         masterState.winner = player1name;
+        console.log("2 OUT");
     }
 }
 
@@ -101,6 +112,12 @@ function checkCollision(){
         if (masterState.player1.pos.x == cell.x && masterState.player1.pos.y == cell.y && count !== masterState.player1.snake.length - 1){
             masterState.stop = true;
             masterState.winner = player2name;
+            console.log("1 IN 1");
+        }
+        if (masterState.player2.pos.x == cell.x && masterState.player2.pos.y == cell.y){
+            masterState.stop = true;
+            masterState.winner = player1name;
+            console.log("2 IN 1");
         }
         count = count + 1;
     }
@@ -110,6 +127,12 @@ function checkCollision(){
         if (masterState.player2.pos.x == cell.x && masterState.player2.pos.y == cell.y && count !== masterState.player2.snake.length - 1){
             masterState.stop = true;
             masterState.winner = player1name;
+            console.log("2 IN 2");
+        }
+        if (masterState.player1.pos.x == cell.x && masterState.player1.pos.y == cell.y){
+            masterState.stop = true;
+            masterState.winner = player2name;
+            console.log("1 IN 2");
         }
         count = count + 1;
     }
