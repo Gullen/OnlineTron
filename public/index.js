@@ -24,7 +24,7 @@ let gameState = {
     player1 : {
         pos : {
             x : 40,
-            y : 3,
+            y : 2,
         },
         vel : {
             x : 0,
@@ -40,7 +40,7 @@ let gameState = {
     player2 : {
         pos : {
             x : 40,
-            y : 77,
+            y : 78,
         },
         vel : {
             x : 0,
@@ -232,8 +232,10 @@ async function play(){
     }
     if (gameState.winner == gameState.player1.name){
         p1infoText.style.color="lightgreen";
+        alert(gameState.player1.name + " WINS!");
     } else {
         p2infoText.style.color="lightgreen";
+        alert(gameState.player2.name + " WINS!");
     }
 }
 

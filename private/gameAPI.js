@@ -40,9 +40,16 @@ module.exports = function api(game){
             }
         }
 
+        if (recceivedState.player1.pos !== masterState.player1.pos){
+            masterState.player1.pos = recceivedState.player1.pos;
+        }
+
+        if (recceivedState.player2.pos !== masterState.player2.pos){
+            masterState.player2.pos = recceivedState.player2.pos;
+        }
+
         if (recceivedState.player1.snake.length > masterState.player1.snake.length){
             masterState.player1.snake = recceivedState.player1.snake;
-            masterState.player1.pos = recceivedState.player1.pos;
         }
 
         if (recceivedState.player2.snake.length > masterState.player2.snake.length){
@@ -89,5 +96,22 @@ function checkBorder(){
 }
 
 function checkCollision(){
+    let count = 0;
+    for (let cell of masterState.player1.snake){
+        if (masterState.player1.pos.x == cell.x && masterState.player1.pos.y == cell.y && count !== masterState.player1.snake.length - 1){
+            masterState.stop = true;
+            masterState.winner = player2name;
+        }
+        count = count + 1;
+    }
+
+    count = 0;
+    for (let cell of masterState.player2.snake){
+        if (masterState.player2.pos.x == cell.x && masterState.player2.pos.y == cell.y && count !== masterState.player2.snake.length - 1){
+            masterState.stop = true;
+            masterState.winner = player1name;
+        }
+        count = count + 1;
+    }
 
 }
